@@ -1,0 +1,7 @@
+{
+  "run_mode": "local",
+  "local": {
+    "API_SERVICE_PORT": "6001",
+    "ELASTICSEARCH_SE_HOST": ["localhost:9200"]
+  }
+}

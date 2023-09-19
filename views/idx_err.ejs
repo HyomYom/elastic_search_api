@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./idx.css" type=text/css />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="search">
+      <div id="search_1">
+        <form
+          id="engine"
+          action="http://localhost:6001/search_post"
+          method="post"
+        >
+          <select name="box" id="box">
+            <option value="">선택</option>
+            <option value="category">category</option>
+            <option value="title">title</option>
+            <option value="reporter">reporter</option>
+          </select>
+          <input id="input" name="name" type="text" >
+          <select name="scope" id="scope">
+            <option value="10">10개</option>
+            <option value="50">50개</option>
+            <option value="100">100개</option>
+            <option value="200">200개</option>
+            <option value="500">500개</option>
+            <option value="1000">1000개</option>
+          </select>
+          <select name="sort" id="sort">
+            <option value="true">정확도순</option>
+            <option value="false">최신순</option>
+          </select>
+          <div id = "range">
+            <input type="text" placeholder="from)2022-01-24T08:38:12.000Z">
+            <input type="text" placeholder="to)2022-01-24T08:38:12.000Z">
+          </div>
+        </input>
+          <input id="send" type="submit" />
+        </form>
+      </div>
+      <div id="search_2">
+        <table>
+          <th id="number">번호</th>
+          <th id="category">카테고리</th>
+          <th id="title">제목</th>
+          <th id="name">이름</th>
+          <tr>
+            <td colspan="4">검색 결과가 없습니다.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

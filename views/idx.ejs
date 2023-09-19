@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./idx.css" type=text/css />
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="search">
+      <div id="search_1">
+        <form
+          id="engine"
+          action="http://localhost:6001/search_post"
+          method="post"
+        >
+          <select name="box" id="box">
+            <option value="">선택</option>
+            <option value="category">category</option>
+            <option value="title">title</option>
+            <option value="reporter">reporter</option>
+          </select>
+          <input id="input" name="name" type="text" >
+          <select name="scope" id="scope">
+            <option value="10">10개</option>
+            <option value="50">50개</option>
+            <option value="100">100개</option>
+            <option value="200">200개</option>
+            <option value="500">500개</option>
+            <option value="1000">1000개</option>
+          </select>
+          <select name="sort" id="sort">
+            <option value="true">정확도순</option>
+            <option value="false">최신순</option>
+          </select>
+          <div id = "range">
+            <input name='date_from' type="text" placeholder="from)">
+            <input name='date_to' type="text" placeholder="to)2">
+          </div>
+        </input>
+          <input id="send" type="submit" />
+        </form>
+      </div>
+      <div id="search_2">
+        <table>
+          <tbody id="search_2_tbody">
+            <tr id="search_2_tr1">
+              <form
+                id="engine2"
+                action="http://localhost:6001/search_post_sp"
+                method="post"
+              >
+                <th id="th1" colspan="2">
+                  <input
+                    id="s_search"
+                    name="s_search"
+                    type="text"
+                    placeholder="상세검색"
+                  />
+                  <input type="submit" value="검색" />
+                </th>
+                <input name="o_search" hidden value=<%=searchkey%>></input>
+                <input name="o_category" hidden value=<%=highlight[0][0]%>></input>
+              </form>
+              <th id="th2" colspan="3">
+                국내증시 : <%=ct_count[0]%>건 / 종목·투자전략 :
+                <%=ct_count[1]%>건
+              </th>
+            </tr>
+            <tr id="search_2_tr2">
+              <td id="number">번호</td>
+              <td id="category">카테고리</td>
+              <td id="title">제목</td>
+              <td id="name">이름</td>
+              <td id="name">날짜</td>
+            </tr>
+            <% for(let i = 0; i < result.length; i++){ %>
+            <tr id="search_2_tr3">
+              <td id="number_1"><%=i+1%></td>
+              <td id="category_1"><%= result[i].category %></td>
+              <td id="title_1"><%= result[i].title %></td>
+              <td id="name_1"><%= result[i].reporter %></td>
+              <td id="date_1"><%= result[i].start_dttm%></td>
+              <!-- .substr(0,10) -->
+            </tr>
+            <% } %>
+            <tr>
+              <td><%=count%></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="hide1" hidden><%=highlight[0][0]%></div>
+    <div id="hide3" hidden><%=searchkey%></div>
+    <div id="hide2" hidden><%=highlight[1][0]%></div>
+  </body>
+
+
+
+  <script>
+    //검색어 하이라이팅
+    var cat = $("#hide1").text();
+    console.log(cat);
+    var str = $("#hide2").text();
+    console.log(str);
+    var start = str.indexOf("<mark>") + 6;
+    var end = str.indexOf("</mark>");
+    var start1 = str.indexOf("<mark>", str.indexOf("<mark>") + 1) + 6;
+    var end1 = str.indexOf("</mark>", str.indexOf("</mark>") + 1);
+    var newStr = str.slice(start, end).trim();
+    var newStr1 = str.slice(start1, end1);
+    var str_1 = $("#name_1").text();
+    var str_2 = str_1.replace(newStr, "<span>" + newStr + "</span>");
+
+    console.log(start);
+    console.log(end);
+    console.log(start1);
+    console.log(end1);
+    console.log(newStr + 1);
+    console.log(newStr1 + 2);
+    let searchs = [];
+    if (end >= 0) {
+      searchs.push(newStr);
+      if (end1 >= 0) {
+        searchs.push(newStr1);
+        newStr2 = newStr + newStr1;
+        searchs.push(newStr2);
+      }
+    }
+    console.log(searchs);
+
+    $(document).ready(function () {
+      var search = searchs;
+      for(var i = 0; i < search.length; i++){
+        if(cat == "reporter") {
+          $("[id^=name_1]:contains('" + search[i] + "')").each(function () {
+            var regex = new RegExp(search[i], "gi");
+            $(this).html(
+              $(this)
+                .text()
+                .replace(
+                  regex,
+                  "<span class='txt-hlight'>" + search[i] + "</span>"
+                )
+            );
+          });
+        } else if(cat == "title.korean"){
+          $("[id^=title_1]:contains('" + search[i] + "')").each(function () {
+            var regex = new RegExp(search[i], "gi");
+            $(this).html(
+              $(this)
+                .text()
+                .replace(
+                  regex,
+                  "<span class='txt-hlight'>" + search[i] + "</span>"
+                )
+            );
+          });
+
+        } else if(category){
+          $("[id^=category_1]:contains('" + search[i] + "')").each(function () {
+          var regex = new RegExp(search[i], "gi");
+          $(this).html(
+            $(this)
+              .text()
+              .replace(regex, "<span class='txt-hlight'>" + search[i] + "</span>")
+          );
+        });
+        } else {
+          $("[table]:contains('" + search[i] + "')").each(function () {
+          var regex = new RegExp(search[i], "gi");
+          $(this).html(
+            $(this)
+              .text()
+              .replace(regex, "<span class='txt-hlight'>" + search[i] + "</span>")
+          );
+        });
+        }
+      }
+    })
+  </script>
+</html>
